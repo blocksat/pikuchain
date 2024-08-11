@@ -32,4 +32,35 @@ class Blockchain{
         newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
+
+    isChainValid(){
+        for(let i=1; i<this.chain.length; i++){
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i-1];
+
+            if(currentBlock.hash !== currentBlock.calculateHash()){
+                return false;
+            }
+
+            if(currentBlock.previousHash !== previousBlock.hash){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
+
+let pikaCoin = new Blockchain();
+pikaCoin.addBlock(new Block(1, "15/09/2017", { amount: 50 }));
+pikaCoin.addBlock(new Block(2, "19/012/2017", { amount: 71 }));
+
+console.log('before tampering');
+console.log('is blockchain valid? ' + pikaCoin.isChainValid());
+
+// tampering 
+pikaCoin.chain[1].data = {amount: 100};
+
+// new let's check if the blockchain valid or not
+console.log('after tampering');
+console.log('is blockchain valid? ' + pikaCoin.isChainValid());
